@@ -1,20 +1,15 @@
 <script setup lang="ts">
 import AppHeader from './components/AppHeader.vue'
+import AppFooter from './components/AppFooter.vue'
 </script>
 
 <template>
   <div id="app">
     <AppHeader />
-
     <main class="main-content">
-      <div class="content-wrapper">
-        <h1>Добро пожаловать!</h1>
-        <p>Это основной контент страницы</p>
-        <p style="margin-top: 12px; color: #7a8a9a; font-size: 14px;">
-          Используйте навигацию в хедере для перехода по страницам
-        </p>
-      </div>
+      <RouterView /> <!-- ← Добавьте это вместо AppFooter -->
     </main>
+    <AppFooter /> <!-- ← AppFooter перенесите сюда, вне main -->
   </div>
 </template>
 
@@ -38,13 +33,20 @@ body {
   background: #f5f7fa;
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* Основной контент */
 .main-content {
-  padding: 0px 0px;
+  flex: 1;
+  padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .content-wrapper {

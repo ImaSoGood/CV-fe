@@ -1,16 +1,22 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { onClickOutside } from '@vueuse/core'
+import type { NavItem } from '@/types/common'
 
-interface NavItem {
-    path: string;
-    label: string;
-}
+const isOpen = ref(false)
+const dropdownRef = ref<HTMLElement | null>(null)
+
+onClickOutside(dropdownRef, () => {
+    isOpen.value = false
+})
 
 const navItems: NavItem[] = [
-    { path: '/', label: 'Experience' },
-    { path: '/about', label: 'Work' },
+    { path: '/', label: 'Work' },
+    { path: '/about', label: 'Experience' },
     { path: '/services', label: 'Future' },
-    { path: '/contacts', label: 'CV' },
+    { path: '/cv', label: 'CV' },
 ];
+
 </script>
 
 <template>
@@ -27,8 +33,15 @@ const navItems: NavItem[] = [
             </RouterLink>
         </nav>
 
-        <div class="header-right">
-            <!-- Можно добавить что-то справа, если нужно -->
+        <div ref="dropdownRef" style="position: relative;">
+            <button class="btn-links" @click="isOpen = !isOpen">
+                Contacts
+            </button>
+            <div class="dropdown" :class="{ open: isOpen }">
+                <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+                <a href="https://github.com" target="_blank">GitHub</a>
+                <span class="email">email@example.com</span>
+            </div>
         </div>
     </header>
 </template>
@@ -41,7 +54,7 @@ const navItems: NavItem[] = [
     justify-content: space-between;
     padding: 0 20px;
     height: 72px;
-    width: 100vw;
+    width: 100%;
     max-width: 100%;
     background: #ffffff;
     color: #2c3e50;
@@ -56,6 +69,7 @@ const navItems: NavItem[] = [
 
 /* Левая часть */
 .header-left {
+    color: black;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -86,6 +100,63 @@ const navItems: NavItem[] = [
     flex: 1;
     justify-content: center;
     padding: 0 20px;
+}
+
+.btn-links {
+    background: black;
+    border: 1px solid #e0e5ec;
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.btn-links:hover {
+    background: #373636;
+    border-color: #c0c8d4;
+}
+
+/*expandable list style*/
+.dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: white;
+    border: 1px solid #e8ecf1;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    min-width: 180px;
+    padding: 6px;
+    display: none;
+}
+
+.dropdown.open {
+    display: block;
+}
+
+.dropdown a,
+.dropdown .email {
+    display: block;
+    padding: 8px 14px;
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 6px;
+    transition: background 0.15s;
+}
+
+.dropdown a:hover,
+.dropdown .email:hover {
+    background: #f0f4f9;
+}
+
+.dropdown .email {
+    cursor: default;
+    color: #5a6c7d;
 }
 
 .nav-link {
