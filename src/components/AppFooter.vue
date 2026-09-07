@@ -1,7 +1,15 @@
+<script setup lang="ts">
+import { ref, onMounted, computed } from 'vue';
+import { store } from '@/stores/store';
+
+const currentYear = new Date().getFullYear()
+const ownerName = computed(() => store.ownerData?.name || '')
+</script>
+
 <template>
     <footer class="footer">
         <div class="footer-content">
-            <p>&copy; {{ currentYear }} Vladimir Kovalev</p>
+            <p>&copy; {{ currentYear }} {{ ownerName }}</p>
             <div class="footer-links">
                 <a href="https://linkedin.com" target="_blank">LinkedIn</a>
                 <a href="https://github.com" target="_blank">GitHub</a>
@@ -10,10 +18,6 @@
         </div>
     </footer>
 </template>
-
-<script setup lang="ts">
-const currentYear = new Date().getFullYear()
-</script>
 
 <style scoped>
 .footer {

@@ -1,15 +1,31 @@
 <script setup lang="ts">
 import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
+import { onMounted } from 'vue'
+import { store } from '@/stores/store'
+import { getOwnerData } from '@/api/owner'
+import { getResumeData } from '@/api/resume'
+
+onMounted(async () => {
+  if (!store.ownerLoaded) {
+    const ownerResp = await getOwnerData()
+    if (ownerResp.success) store.setOwner(ownerResp.data.owner)
+  }
+
+  if (!store.resumeLoaded) {
+    const resumeResp = await getResumeData()
+    if (resumeResp.success) store.setResume(resumeResp.data)
+  }
+})
 </script>
 
 <template>
   <div id="app">
     <AppHeader />
     <main class="main-content">
-      <RouterView /> <!-- ← Добавьте это вместо AppFooter -->
+      <RouterView />
     </main>
-    <AppFooter /> <!-- ← AppFooter перенесите сюда, вне main -->
+    <AppFooter />
   </div>
 </template>
 

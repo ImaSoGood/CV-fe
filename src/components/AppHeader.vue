@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import type { NavItem } from '@/types/common'
+import { store } from '@/stores/store'
 
 const isOpen = ref(false)
 const dropdownRef = ref<HTMLElement | null>(null)
+const loading = ref(false)
+const ownerData = computed(() => store.ownerData)
 
 onClickOutside(dropdownRef, () => {
     isOpen.value = false
@@ -22,8 +25,8 @@ const navItems: NavItem[] = [
 <template>
     <header class="header">
         <div class="header-left">
-            <span class="text">Vladimir Kovalev</span>
-            <span class="position">softwate engineer</span>
+            <span class="text">{{ ownerData?.name }}</span>
+            <span class="position">{{ ownerData?.position }}</span>
         </div>
 
         <nav class="header-center">
@@ -38,13 +41,14 @@ const navItems: NavItem[] = [
                 Contacts
             </button>
             <div class="dropdown" :class="{ open: isOpen }">
-                <a href="https://linkedin.com" target="_blank">LinkedIn</a>
-                <a href="https://github.com" target="_blank">GitHub</a>
-                <span class="email">email@example.com</span>
+                <a v-for="contact in ownerData?.contacts" :key="contact.platform" :href="contact.link" target="_blank">
+                    {{ contact.text }}
+                </a>
             </div>
         </div>
     </header>
 </template>
+
 
 <style scoped>
 /* Хедер на всю ширину без отступов */
@@ -72,7 +76,7 @@ const navItems: NavItem[] = [
     color: black;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 13px;
     flex-shrink: 0;
 }
 

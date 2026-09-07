@@ -1,45 +1,40 @@
-<script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
-import { getResumeData } from '@/api/Resume'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { getResumeData } from '@/api/resume'
+import { store } from '@/stores/store'
 import type { FullResume } from '@/types/resume'
 
-export default defineComponent({
-    name: 'CV',
-    setup() {
-        const resumeData = ref<FullResume | null>(null)
-        const loading = ref(false)
-        const error = ref<string | null>(null)
+const loading = ref(false)
+const error = ref<string | null>(null)
+const resumeData = ref<FullResume | null>(null)
 
-        const fetchResumeData = async () => {
-            loading.value = true
-            error.value = null
-
-            try {
-                const response = await getResumeData()
-                if (response.success) {
-                    resumeData.value = response.data
-                } else {
-                    error.value = response.message || 'Ошибка загрузки данных'
-                }
-            } catch (err) {
-                error.value = err instanceof Error ? err.message : 'Произошла ошибка при загрузке'
-                console.error('Error fetching resume data:', err)
-            } finally {
-                loading.value = false
-            }
-        }
-
-        onMounted(() => {
-            fetchResumeData()
-        })
-
-        return {
-            resumeData,
-            loading,
-            error,
-            fetchResumeData
-        }
+const fetchResumeData = async () => {
+    if (store.resumeLoaded && store.resumeData) {
+        resumeData.value = store.resumeData
+        return
     }
+
+    loading.value = true
+    error.value = null
+
+    try {
+        const response = await getResumeData()
+        if (response.success) {
+            store.setResume(response.data)
+            resumeData.value = response.data
+        } else {
+            error.value = response.message || 'Ошибка загрузки данных'
+        }
+    } catch (err) {
+        error.value = err instanceof Error ? err.message : 'Произошла ошибка при загрузке'
+        console.error('Error fetching resume data:', err)
+    } finally {
+        loading.value = false
+    }
+}
+
+onMounted(() => {
+    fetchResumeData()
 })
 </script>
 
@@ -148,7 +143,7 @@ export default defineComponent({
 .item-header h3 {
     font-size: 16px;
     font-weight: 500;
-    color: #007bff;
+    color: #000000;
     margin: 0;
 }
 
@@ -175,7 +170,7 @@ export default defineComponent({
     content: "•";
     position: absolute;
     left: 0;
-    color: #007bff;
+    color: #000000;
     font-weight: bold;
 }
 
