@@ -2,6 +2,7 @@ import { reactive } from 'vue'
 import type { FullResume } from "@/types/resume";
 import type { Owner } from "@/types/owner";
 import type { WorkResponse } from '@/types/work';
+import type { ExperienceResponse } from '@/types/experience';
 
 class Store {
     private static instance: Store
@@ -15,13 +16,18 @@ class Store {
     workData = reactive<WorkResponse>({} as WorkResponse)
     workLoaded = false
 
+    experienceData = reactive<ExperienceResponse>({} as ExperienceResponse)
+    experienceLoaded = false
+
     static getInstance(): Store {
         if (!Store.instance)
             Store.instance = new Store()
 
         return Store.instance
     }
-
+    /*
+    * owner
+    */
     getOwner(): Owner {
         return this.ownerData
     }
@@ -37,7 +43,9 @@ class Store {
         })
         this.ownerLoaded = false
     }
-
+    /*
+    * resume
+    */
     setResume(data: FullResume) {
         Object.assign(this.resumeData, data)
         this.resumeLoaded = true
@@ -53,7 +61,9 @@ class Store {
         })
         this.resumeLoaded = false
     }
-
+    /*
+    * work
+    */
     setWork(data: WorkResponse) {
         Object.assign(this.workData, data)
         this.workLoaded = true
@@ -68,6 +78,24 @@ class Store {
             delete (this.workData as any)[key]
         })
         this.workLoaded = false
+    }
+    /*
+    * ExperienceResponse
+    */
+    setExperience(data: ExperienceResponse) {
+        Object.assign(this.experienceData, data)
+        this.experienceLoaded = true
+    }
+
+    getExperience(): ExperienceResponse | null {
+        return this.experienceData
+    }
+
+    clearExperience() {
+        Object.keys(this.experienceData).forEach(key => {
+            delete (this.experienceData as any)[key]
+        })
+        this.experienceLoaded = false
     }
 }
 

@@ -8,3 +8,8 @@ export interface NavItem {
     path: string;
     label: string;
 }
+
+export interface TitledText {
+    title: string
+    text: string
+}

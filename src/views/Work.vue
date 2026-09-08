@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { store } from '@/stores/store'
-import type { WorkResponse } from '@/types/work'
+import TitledTextComponent from '@/components/TitledTextComponent.vue'
 
 const work = computed(() => store.workData)
 </script>
@@ -24,12 +24,7 @@ const work = computed(() => store.workData)
             </div>
         </div>
 
-        <div v-if="store.workData?.work?.length" class="additional-text">
-            <div v-for="(item, index) in store.workData.work" :key="index">
-                <h2>{{ item.title }}</h2>
-                <p v-html="item.text"></p>
-            </div>
-        </div>
+        <TitledTextComponent :items="work.work" />
     </div>
 </template>
 

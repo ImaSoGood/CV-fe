@@ -15,8 +15,8 @@ onClickOutside(dropdownRef, () => {
 
 const navItems: NavItem[] = [
     { path: '/work', label: 'Work' },
-    { path: '/about', label: 'Experience' },
-    { path: '/services', label: 'Future' },
+    { path: '/experience', label: 'Experience' },
+    //{ path: '/future', label: 'Future' },
     { path: '/cv', label: 'CV' },
 ];
 
