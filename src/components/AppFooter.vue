@@ -3,17 +3,17 @@ import { ref, onMounted, computed } from 'vue';
 import { store } from '@/stores/store';
 
 const currentYear = new Date().getFullYear()
-const ownerName = computed(() => store.ownerData?.name || '')
+const ownerData = computed(() => store.ownerData || '')
 </script>
 
 <template>
     <footer class="footer">
         <div class="footer-content">
-            <p>&copy; {{ currentYear }} {{ ownerName }}</p>
+            <p>&copy; {{ currentYear }} {{ ownerData?.name }}</p>
             <div class="footer-links">
-                <a href="https://linkedin.com" target="_blank">LinkedIn</a>
-                <a href="https://github.com" target="_blank">GitHub</a>
-                <span class="email">email@example.com</span>
+                <a v-for="contact in ownerData?.contacts" :key="contact.platform" :href="contact.link" target="_blank">
+                    {{ contact.text }}
+                </a>
             </div>
         </div>
     </footer>

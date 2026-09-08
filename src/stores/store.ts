@@ -1,6 +1,7 @@
 import { reactive } from 'vue'
 import type { FullResume } from "@/types/resume";
 import type { Owner } from "@/types/owner";
+import type { WorkResponse } from '@/types/work';
 
 class Store {
     private static instance: Store
@@ -10,6 +11,9 @@ class Store {
 
     resumeData = reactive<FullResume>({} as FullResume)
     resumeLoaded = false
+
+    workData = reactive<WorkResponse>({} as WorkResponse)
+    workLoaded = false
 
     static getInstance(): Store {
         if (!Store.instance)
@@ -35,7 +39,7 @@ class Store {
     }
 
     setResume(data: FullResume) {
-        this.resumeData = data
+        Object.assign(this.resumeData, data)
         this.resumeLoaded = true
     }
 
@@ -47,6 +51,23 @@ class Store {
         Object.keys(this.resumeData).forEach(key => {
             delete (this.resumeData as any)[key]
         })
+        this.resumeLoaded = false
+    }
+
+    setWork(data: WorkResponse) {
+        Object.assign(this.workData, data)
+        this.workLoaded = true
+    }
+
+    getWork(): WorkResponse | null {
+        return this.workData
+    }
+
+    clearWork() {
+        Object.keys(this.workData).forEach(key => {
+            delete (this.workData as any)[key]
+        })
+        this.workLoaded = false
     }
 }
 

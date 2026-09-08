@@ -3,18 +3,22 @@ import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
 import { onMounted } from 'vue'
 import { store } from '@/stores/store'
-import { getOwnerData } from '@/api/owner'
-import { getResumeData } from '@/api/resume'
+import { getOwnerData, getResumeData, getWorkData } from '@/api/apiRoutes'
 
 onMounted(async () => {
   if (!store.ownerLoaded) {
     const ownerResp = await getOwnerData()
-    if (ownerResp.success) store.setOwner(ownerResp.data.owner)
+    if (ownerResp.success) store.setOwner(ownerResp.data?.owner)
   }
 
   if (!store.resumeLoaded) {
     const resumeResp = await getResumeData()
     if (resumeResp.success) store.setResume(resumeResp.data)
+  }
+
+  if (!store.workLoaded) {
+    const workData = await getWorkData()
+    if (workData.success) store.setWork(workData.data)
   }
 })
 </script>
