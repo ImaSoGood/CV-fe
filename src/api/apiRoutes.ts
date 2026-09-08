@@ -9,8 +9,8 @@ export async function getResumeData(): Promise<ApiResponse<FullResume>> {
     return await api.get('/resume') as unknown as ApiResponse<FullResume>
 }
 
-export async function getOwnerData(): Promise<ApiResponse<Owner>> {
-    return await api.get('/owner') as unknown as ApiResponse<Owner>
+export async function getOwnerData(): Promise<ApiResponse<{ owner: Owner }>> {
+    return await api.get('/owner') as unknown as ApiResponse<{ owner: Owner }>
 }
 
 export async function getWorkData(): Promise<ApiResponse<WorkResponse>> {
