@@ -17,7 +17,7 @@ const resumeData = computed(() => store.resumeData)
             <!--<button @click="fetchResumeData">Повторить</button>-->
         </div>
         <div v-else-if="resumeData" class="cv-content">
-            <h1>Experience</h1>
+            <h1>Working Experience</h1>
 
             <div v-for="(item, index) in resumeData.resume" :key="index" class="resume-item">
                 <div class="item-period">
