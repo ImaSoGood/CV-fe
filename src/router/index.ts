@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import CV from '@/views/CV.vue'
 import Work from '@/views/Work.vue'
 import Experience from '@/views/Experience.vue'
