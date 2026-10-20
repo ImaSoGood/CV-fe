@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import type { NavItem } from '@/types/common'
 import { store } from '@/stores/store'
 
 const isOpen = ref(false)
 const dropdownRef = ref<HTMLElement | null>(null)
-const loading = ref(false)
 const ownerData = computed(() => store.ownerData)
 
 onClickOutside(dropdownRef, () => {
@@ -14,24 +13,23 @@ onClickOutside(dropdownRef, () => {
 })
 
 const navItems: NavItem[] = [
+    { path: '/projects', label: 'Projects' },
     { path: '/work', label: 'Work' },
     { path: '/experience', label: 'Experience' },
-    //{ path: '/future', label: 'Future' },
+    { path: '/home', label: 'Home' },
     { path: '/cv', label: 'CV' },
 ];
-
 </script>
 
 <template>
     <header class="header">
-        <div class="header-left">
-            <span class="text">{{ ownerData?.name }}</span>
-            <span class="position">{{ ownerData?.position }}</span>
-        </div>
+        <RouterLink to="/home" class="nav-link home-link" active-class="active" aria-label="Home">
+            Home
+        </RouterLink>
 
         <nav class="header-center">
-            <RouterLink v-for="item in navItems" :key="item.path" :to="item.path" class="nav-link"
-                active-class="active">
+            <RouterLink v-for="item in navItems.filter(i => i.path !== '/home')" :key="item.path" :to="item.path"
+                class="nav-link" active-class="active">
                 {{ item.label }}
             </RouterLink>
         </nav>
@@ -49,9 +47,7 @@ const navItems: NavItem[] = [
     </header>
 </template>
 
-
 <style scoped>
-/* Хедер на всю ширину без отступов */
 .header {
     display: flex;
     align-items: center;
@@ -71,96 +67,16 @@ const navItems: NavItem[] = [
     box-sizing: border-box;
 }
 
-/* Левая часть */
-.header-left {
-    color: black;
-    display: flex;
-    align-items: center;
-    gap: 13px;
+.home-link {
     flex-shrink: 0;
 }
 
-.text {
-    font-size: 18px;
-    font-weight: 700;
-    color: #2c3e50;
-    letter-spacing: -0.3px;
-}
-
-.position {
-    font-size: 12px;
-    background: #eef2f7;
-    color: #5a6c7d;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: 500;
-    border: 1px solid #e0e5ec;
-}
-
-/* Центральная часть с кнопками */
 .header-center {
     display: flex;
     gap: 6px;
     flex: 1;
     justify-content: center;
     padding: 0 20px;
-}
-
-.btn-links {
-    background: black;
-    border: 1px solid #e0e5ec;
-    border-radius: 8px;
-    padding: 8px 16px;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-}
-
-.btn-links:hover {
-    background: #373636;
-    border-color: #c0c8d4;
-}
-
-/*expandable list style*/
-.dropdown {
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
-    background: white;
-    border: 1px solid #e8ecf1;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    min-width: 180px;
-    padding: 6px;
-    display: none;
-}
-
-.dropdown.open {
-    display: block;
-}
-
-.dropdown a,
-.dropdown .email {
-    display: block;
-    padding: 8px 14px;
-    color: #2c3e50;
-    text-decoration: none;
-    font-size: 14px;
-    border-radius: 6px;
-    transition: background 0.15s;
-}
-
-.dropdown a:hover,
-.dropdown .email:hover {
-    background: #f0f4f9;
-}
-
-.dropdown .email {
-    cursor: default;
-    color: #5a6c7d;
 }
 
 .nav-link {
@@ -187,23 +103,61 @@ const navItems: NavItem[] = [
     transform: scale(0.96);
 }
 
-/* Активная кнопка */
 .nav-link.active {
     background: #e8edf5;
     color: #2c3e50;
     font-weight: 600;
 }
 
-/* Правая часть */
-.header-right {
-    flex-shrink: 0;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 12px;
+.btn-links {
+    background: black;
+    border: 1px solid #e0e5ec;
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
 }
 
-/* Адаптивность */
+.btn-links:hover {
+    background: #373636;
+    border-color: #c0c8d4;
+}
+
+.dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: white;
+    border: 1px solid #e8ecf1;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    min-width: 180px;
+    padding: 6px;
+    display: none;
+}
+
+.dropdown.open {
+    display: block;
+}
+
+.dropdown a {
+    display: block;
+    padding: 8px 14px;
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 6px;
+    transition: background 0.15s;
+}
+
+.dropdown a:hover {
+    background: #f0f4f9;
+}
+
 @media (max-width: 768px) {
     .header {
         flex-wrap: wrap;
@@ -212,35 +166,23 @@ const navItems: NavItem[] = [
         gap: 12px;
     }
 
-    .header-left {
-        width: 100%;
-        justify-content: center;
-    }
-
     .header-center {
         flex-wrap: wrap;
         width: 100%;
         gap: 4px;
         padding: 0;
+        justify-content: center;
     }
 
     .nav-link {
         padding: 6px 14px;
         font-size: 13px;
     }
-
-    .header-right {
-        display: none;
-    }
 }
 
 @media (max-width: 480px) {
     .header {
         padding: 10px 12px;
-    }
-
-    .text {
-        font-size: 18px;
     }
 
     .nav-link {

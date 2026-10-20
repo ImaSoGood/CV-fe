@@ -4,6 +4,7 @@ import type { FullResume } from '@/types/resume'
 import type { Owner } from '@/types/owner'
 import type { WorkResponse } from '@/types/work'
 import type { Experience, ExperienceResponse } from '@/types/experience'
+import type { GroupResponse } from '@/types/projectGroups'
 
 export async function getResumeData(): Promise<ApiResponse<FullResume>> {
     return await api.get('/resume') as unknown as ApiResponse<FullResume>
@@ -19,4 +20,8 @@ export async function getWorkData(): Promise<ApiResponse<WorkResponse>> {
 
 export async function getExperienceData(): Promise<ApiResponse<ExperienceResponse>> {
     return await api.get('experience') as unknown as ApiResponse<ExperienceResponse>
+}
+
+export async function getProjectGroupsData(): Promise<ApiResponse<GroupResponse>> {
+    return await api.get('group-projects') as unknown as ApiResponse<GroupResponse>
 }

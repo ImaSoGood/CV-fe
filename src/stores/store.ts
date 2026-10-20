@@ -3,6 +3,7 @@ import type { FullResume } from "@/types/resume";
 import type { Owner } from "@/types/owner";
 import type { WorkResponse } from '@/types/work';
 import type { ExperienceResponse } from '@/types/experience';
+import type { GroupResponse } from '@/types/projectGroups';
 
 class Store {
     private static instance: Store
@@ -18,6 +19,10 @@ class Store {
 
     experienceData = reactive<ExperienceResponse>({} as ExperienceResponse)
     experienceLoaded = false
+
+    groupProjectsData = reactive<GroupResponse>({} as GroupResponse)
+    groupProjectsLoaded = false
+
 
     static getInstance(): Store {
         if (!Store.instance)
@@ -96,6 +101,22 @@ class Store {
             delete (this.experienceData as any)[key]
         })
         this.experienceLoaded = false
+    }
+    /*
+    * GroupProjects
+    */
+    setGroupProjects(data: GroupResponse) {
+        Object.assign(this.groupProjectsData, data)
+    }
+
+    getGroupProjects(): GroupResponse | null {
+        return this.groupProjectsData
+    }
+
+    clearGroupProjects() {
+        Object.keys(this.groupProjectsData).forEach(key => {
+            delete (this.groupProjectsData as any)[key]
+        })
     }
 }
 
