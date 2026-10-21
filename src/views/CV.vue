@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { getResumeData } from '@/api/apiRoutes'
+import { ref, computed } from 'vue'
 import { store } from '@/stores/store'
-import type { FullResume } from '@/types/resume'
 
 const loading = ref(false)
 const error = ref<string | null>(null)
@@ -11,7 +9,7 @@ const resumeData = computed(() => store.resumeData)
 
 <template>
     <div class="cv-container">
-        <div v-if="loading" class="loading">Загрузка...</div>
+        <div v-if="loading" class="loading">Loading...</div>
         <div v-else-if="error" class="error">
             <p>{{ error }}</p>
             <!--<button @click="fetchResumeData">Повторить</button>-->

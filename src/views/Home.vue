@@ -1,28 +1,36 @@
 <script setup lang="ts">
 import { store } from '@/stores/store'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import ProjectCarousel from '@/components/ProjectCarousel.vue'
+import TechnologyList from '@/components/TechnologyList.vue'
 
 const owner = computed(() => store.ownerData)
-const achievements = computed(() => store.ownerData?.achivements ?? [])
-const name = computed(() => owner.value.name.split(' '))
-const photo = ref(owner.value.picture_url)
 
-const profile = {
-  firstName: name.value[0],
-  lastName: name.value[1],
-  position: owner.value.position,
-  description: owner.value.about,
-}
+const nameParts = computed(() => {
+  const fullName = owner.value?.name || ''
+  return fullName.trim().split(/\s+/)
+})
 
-// Вычисляем проекты для главной
+const profile = computed(() => ({
+  firstName: nameParts.value[0] ?? '',
+  lastName: nameParts.value[1] ?? '',
+  position: owner.value?.position ?? '',
+  description: owner.value?.about ?? '',
+}))
+
+const photo = computed(() => owner.value?.picture_url ?? '')
+const achievements = computed(() => owner.value?.achivements ?? [])
+
+// Если хотите показывать всё, кроме явного false:
+const homeTechnology = computed(() =>
+  (store.workData?.technology ?? []).filter(t => t.show_home !== false)
+)
+
 const homeProjects = computed(() => {
   const groups = store.groupProjectsData?.groups ?? []
-  // Собираем все проекты из всех групп в один массив
-  const allProjects = groups.flatMap(g => g.projects)
-  // Фильтруем те, у которых show_home === true
-  return allProjects.filter(p => p.show_home === true)
+  // Тоже меняем фильтр на !== false, если на бэке null
+  return groups.flatMap(g => g.projects).filter(p => p.show_home !== false)
 })
 </script>
 
@@ -55,10 +63,24 @@ const homeProjects = computed(() => {
       </RouterLink>
     </section>
 
-    <!-- Нижняя область: Карусель проектов -->
     <section class="home-bottom" v-if="homeProjects.length">
-      <h2 class="section-title">Featured Projects</h2>
+      <div class="section-header">
+        <h2 class="section-title">Key Projects</h2>
+        <RouterLink to="/projects" class="section-link">
+          All projects →
+        </RouterLink>
+      </div>
       <ProjectCarousel :projects="homeProjects" />
+    </section>
+
+    <section class="home-bottom" v-if="homeTechnology.length">
+      <div class="section-header">
+        <h2 class="section-title">Key Skills</h2>
+        <RouterLink to="/work" class="section-link">
+          All skills →
+        </RouterLink>
+      </div>
+      <TechnologyList :items="homeTechnology" />
     </section>
   </main>
 </template>
@@ -220,13 +242,42 @@ const homeProjects = computed(() => {
   margin-top: 64px;
 }
 
-.section-title {
-  color: #1a1a1a;
-  font-size: 24px;
-  font-weight: 600;
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 1px solid #e8ecf1;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.section-link {
+  flex-shrink: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: #4a5a6a;
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.section-link:hover {
+  background: #f0f4f9;
+  color: #1a2a3a;
+}
+
+.section-link:active {
+  transform: scale(0.96);
 }
 
 /* ---------- Адаптив ---------- */
@@ -269,6 +320,18 @@ const homeProjects = computed(() => {
 
   .home-bottom {
     margin-top: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .section-title {
+    font-size: 20px;
   }
 }
 </style>

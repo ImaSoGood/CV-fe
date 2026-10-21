@@ -10,7 +10,7 @@ const groups = computed(() => store.groupProjectsData?.groups ?? [])
     <main class="projects">
         <h1>Projects</h1>
 
-        <div v-if="!groups.length" class="loading">Загрузка...</div>
+        <div v-if="!groups.length" class="loading">Loading...</div>
 
         <div v-else class="groups">
             <section v-for="group in groups" :key="group.name" class="group">

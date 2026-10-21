@@ -6,6 +6,7 @@ export interface Work {
 export interface Technology {
     title: string,
     description: string,
+    show_home: boolean | null,
     items: string[]
 }
 
