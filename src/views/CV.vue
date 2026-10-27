@@ -1,21 +1,20 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { store } from '@/stores/store'
 
-const loading = ref(false)
-const error = ref<string | null>(null)
 const resumeData = computed(() => store.resumeData)
+const cvUrl = computed(() => store.ownerData?.cv_path ?? '')
 </script>
 
 <template>
     <div class="cv-container">
-        <div v-if="loading" class="loading">Loading...</div>
-        <div v-else-if="error" class="error">
-            <p>{{ error }}</p>
-            <!--<button @click="fetchResumeData">Повторить</button>-->
-        </div>
-        <div v-else-if="resumeData" class="cv-content">
-            <h1>Working Experience</h1>
+        <div v-if="resumeData.resume?.length" class="cv-content">
+            <div class="cv-header">
+                <h1>Working Experience</h1>
+                <a v-if="cvUrl" :href="cvUrl" class="cv-download" download>
+                    Download CV
+                </a>
+            </div>
 
             <div v-for="(item, index) in resumeData.resume" :key="index" class="resume-item">
                 <div class="item-period">
@@ -35,6 +34,8 @@ const resumeData = computed(() => store.resumeData)
                 </div>
             </div>
         </div>
+
+        <div v-else class="loading">Loading...</div>
     </div>
 </template>
 
@@ -51,27 +52,44 @@ const resumeData = computed(() => store.resumeData)
     color: #666;
 }
 
-.error {
-    text-align: center;
-    padding: 60px 0;
-}
-
-.error button {
-    padding: 8px 24px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.cv-content h1 {
-    color: black;
-    font-size: 28px;
-    font-weight: 600;
+.cv-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
     margin-bottom: 30px;
     padding-bottom: 15px;
     border-bottom: 2px solid #040404;
+}
+
+.cv-header h1 {
+    margin: 0;
+    color: black;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.cv-download {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: #000;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+}
+
+.cv-download:hover {
+    background: #373636;
+}
+
+.cv-download:active {
+    transform: scale(0.96);
 }
 
 .resume-item {
@@ -148,7 +166,13 @@ const resumeData = computed(() => store.resumeData)
         padding: 20px 15px;
     }
 
-    .cv-content h1 {
+    .cv-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .cv-header h1 {
         font-size: 24px;
     }
 

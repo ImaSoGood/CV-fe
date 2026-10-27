@@ -4,9 +4,13 @@ import type { Owner } from "@/types/owner";
 import type { WorkResponse } from '@/types/work';
 import type { ExperienceResponse } from '@/types/experience';
 import type { GroupResponse } from '@/types/projectGroups';
+import type { AllData, AllDataResponse } from '@/types/common';
 
 class Store {
     private static instance: Store
+
+    data = reactive<AllDataResponse>({} as AllDataResponse)
+    dataLoaded = false
 
     ownerData = reactive<Owner>({} as Owner)
     ownerLoaded = false
@@ -30,6 +34,28 @@ class Store {
 
         return Store.instance
     }
+    /*
+    * all data
+    */
+    getData(): AllDataResponse {
+        return this.data
+    }
+
+    setData(chunks: AllData[]) {
+        for (const c of chunks) {
+            if (c.owner) { Object.assign(this.ownerData, c.owner); this.ownerLoaded = true }
+            if (c.resume) { this.resumeData.resume = c.resume; this.resumeLoaded = true }
+            if (c.work) { this.workData.work = c.work; this.workLoaded = true }
+            if (c.technology) { this.workData.technology = c.technology }
+            if (c.experience) { this.experienceData.experience = c.experience; this.experienceLoaded = true }
+            if (c.groups) { this.groupProjectsData.groups = c.groups; this.groupProjectsLoaded = true }
+        }
+        this.dataLoaded = true
+    }
+    /*
+    * all data
+    */
+
     /*
     * owner
     */

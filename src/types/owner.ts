@@ -3,6 +3,7 @@ export interface Owner {
     position: string
     about?: string
     picture_url?: string
+    cv_path?: string
     achivements?: Achivements[]
     contacts: Contact[]
 }

@@ -3,10 +3,15 @@ import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
 import { onMounted } from 'vue'
 import { store } from '@/stores/store'
-import { getExperienceData, getOwnerData, getProjectGroupsData, getResumeData, getWorkData } from '@/api/apiRoutes'
+import { getAllData, getExperienceData, getOwnerData, getProjectGroupsData, getResumeData, getWorkData } from '@/api/apiRoutes'
 
 onMounted(async () => {
-  if (!store.ownerLoaded) {
+  if (!store.dataLoaded) {
+    const response = await getAllData()
+    if (response.success) store.setData(response.data)
+  }
+
+  /*if (!store.ownerLoaded) {
     const ownerResp = await getOwnerData()
     if (ownerResp.success) store.setOwner(ownerResp.data?.owner)
   }
@@ -29,7 +34,7 @@ onMounted(async () => {
   if (!store.groupProjectsLoaded) {
     const groupProjectsData = await getProjectGroupsData()
     if (groupProjectsData.success) store.setGroupProjects(groupProjectsData.data)
-  }
+  }*/
 })
 </script>
 

@@ -8,7 +8,7 @@ import Projects from '@/views/Projects.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/', redirect: '/work' },
+    { path: '/', redirect: '/home' },
     { path: '/cv', name: 'cv', component: CV },
     { path: '/work', name: 'work', component: Work },
     { path: '/home', name: 'home', component: Home },
